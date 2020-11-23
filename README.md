@@ -19,9 +19,9 @@ We recommend you to use the prometheus kubernetes operator to run prometheus in 
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-    name: docker-rate-limit-exporter
+    name: docker-hub-rate-limit-exporter
     labels:
-        app: docker-rate-limit-exporter
+        app: docker-hub-rate-limit-exporter
         # you may need to add further labels here depending on your prometheus configuration
 spec:
     selector:
@@ -31,7 +31,7 @@ spec:
         - port: http
           path: "/"
           interval: 10s
-    jobLabel: docker-rate-limit-exporter
+    jobLabel: docker-hub-rate-limit-exporter
     namespaceSelector: ### this part can be ommited if your ServiceMonitor resource lives in the same namespace as the docker-hub-rate-limit-exporter sercice
         matchNames:
             - <the namespace where the docker-hub-rate-limit-exporter lives>
