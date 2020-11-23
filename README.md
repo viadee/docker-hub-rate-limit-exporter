@@ -11,6 +11,10 @@ You can install the chart by downloading this repository and running the helm in
 
 By running the above command you will install the docker-hub-rate-limit-exporter into your cluster. It will expose the dockerhub limits in the prometheus format.
 
+## How to configure your docker credentials
+
+TODO
+
 ## How to tell prometheus to scrap the metrics
 
 We recommend you to use the prometheus kubernetes operator to run prometheus in your cluster (see: https://github.com/prometheus-operator/prometheus-operator). If you run the operator you can create a `ServiceMonitor` resource to tell prometheus how to scrap the docker-hub-rate-limit-exporter. See the example below:
