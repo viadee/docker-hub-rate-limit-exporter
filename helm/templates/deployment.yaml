@@ -11,10 +11,12 @@ spec:
       {{- include "docker-hub-rate-limit-exporter.selectorLabels" . | nindent 6 }}
   template:
     metadata:
-      {{- with .Values.podAnnotations }}
       annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+        checksum/secret: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+        {{- with .Values.podAnnotations }}
         {{- toYaml . | nindent 8 }}
-      {{- end }}
+        {{- end }}
       labels:
         {{- include "docker-hub-rate-limit-exporter.selectorLabels" . | nindent 8 }}
     spec:
@@ -33,7 +35,7 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
-              containerPort: 80
+              containerPort: {{ .Values.config.exporterPort }}
               protocol: TCP
           livenessProbe:
             httpGet:
@@ -47,6 +49,27 @@ spec:
             timeoutSeconds: 5
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+          env:
+            - name: DOCKERHUB_USERNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "docker-hub-rate-limit-exporter.fullname" . }}-configmap
+                  key: dockerhub-username
+            - name: DOCKERHUB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "docker-hub-rate-limit-exporter.fullname" . }}-secret
+                  key: dockerhub-password
+            - name: DOCKERHUB_EXPORTER_VERBOSE
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "docker-hub-rate-limit-exporter.fullname" . }}-configmap
+                  key: exporter-verbosity
+            - name: DOCKERHUB_EXPORTER_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "docker-hub-rate-limit-exporter.fullname" . }}-configmap
+                  key: exporter-port
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
