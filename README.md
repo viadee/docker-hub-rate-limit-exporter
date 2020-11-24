@@ -13,7 +13,11 @@ By running the above command you will install the docker-hub-rate-limit-exporter
 
 ## How to configure your docker credentials
 
-TODO
+If your kubernetes cluster does not authenticate with dockerhub you don't need to do anything here. However, if it does, you need to configure the crendetials with helm values. This is because the docker-hub-rate-limit-exporter does not use the dockerhub account assosiated with the docker context of your kubernetes-cluster. You can configure it to do so by following the steps below:
+
+1. Create a helm value file as per the example in this repository (see: helm-values.example.yaml)
+2. Fill in the variables `dockerhubUsername` and `dockerhubPassword`. It is recommended to use a dockerhub access token for the password.
+3. run `helm install <release name> docker-hub-rate-limit-exporter/helm --namespace=<desired namespace> -f <name of value file>`
 
 ## How to tell prometheus to scrap the metrics
 
