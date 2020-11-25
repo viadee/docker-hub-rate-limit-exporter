@@ -1,6 +1,6 @@
 apiVersion: v2
 name: docker-hub-rate-limit-exporter
-description: A Helm chart for Kubernetes
+description: Export your current docker hub rate limit status to prometheus.
 
 # A chart can be either an 'application' or a 'library' chart.
 #
