@@ -2,6 +2,12 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
+config:
+    # exporterPort: 80 ## if you want to change the port exposed by the docker-hub-rate-limit-exporter
+    # exporterVerbosity: 1 ## the loglevel
+    # dockerhubUsername: viadee ## put your dockerhub username here
+    # dockerhubPassword: <your password> ## put your dockerhub password here
+
 replicaCount: 1
 
 image:
