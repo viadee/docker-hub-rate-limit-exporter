@@ -40,7 +40,7 @@ spec:
           path: "/"
           interval: 10s
     jobLabel: docker-hub-rate-limit-exporter
-    namespaceSelector: ### this part can be ommited if your ServiceMonitor resource lives in the same namespace as the docker-hub-rate-limit-exporter sercice
+    namespaceSelector: ### this part can be ommited if your ServiceMonitor resource lives in the same namespace as the docker-hub-rate-limit-exporter service
         matchNames:
             - <the namespace where the docker-hub-rate-limit-exporter lives>
 ```
