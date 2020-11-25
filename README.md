@@ -7,7 +7,7 @@ This repository enables prometheus scrapping of dockerhub rate limits by providi
 You can install the chart by downloading this repository and running the helm install command. Follow the steps below:
 
 1. run `git clone https://github.com/viadee/docker-hub-rate-limit-exporter.git`
-2. run `helm install <release name> docker-hub-rate-limit-exporter/helm --namespace=<desired namespace>`
+2. run `helm install <release name> docker-hub-rate-limit-exporter/chart --namespace=<desired namespace>`
 
 By running the above command you will install the docker-hub-rate-limit-exporter into your cluster. It will expose the dockerhub limits in the prometheus format.
 
