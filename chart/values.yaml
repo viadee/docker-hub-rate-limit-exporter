@@ -12,7 +12,7 @@ replicaCount: 1
 
 image:
     repository: viadee/docker-hub-rate-limit-exporter
-    tag: latest
+    tag: version-1.0
 
 imagePullSecrets: []
 nameOverride: ""
