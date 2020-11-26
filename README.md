@@ -47,6 +47,8 @@ spec:
             - <the namespace where the docker-hub-rate-limit-exporter lives>
 ```
 
-## Build by viadee Unternehmensberatung AG
+## Collaboration
 
-This helm chart was build by viadee Unternehmensberatrung AG. If you are interested to find out what else we are doing, check out our website: https://www.viadee.de/en/solutions/cloud
+This helm chart was build by viadee Unternehmensberatung AG. If you are interested to find out what else we are doing, check out our website: https://www.viadee.de/en/solutions/cloud
+
+If you have any feedback, ideas or extensions feel free to reach out and create a GitHub issue.
