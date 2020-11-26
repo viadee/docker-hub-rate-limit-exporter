@@ -2,7 +2,11 @@
 
 ![](teaser.jpg)
 
-This repository enables prometheus scrapping of dockerhub rate limits by providing a ready to use docker image and helm chart. It is based on the work done by gitlab as described in their [blogpost](https://about.gitlab.com/blog/2020/11/18/docker-hub-rate-limit-monitoring/). The original source of the Python script can be found [here](https://gitlab.com/gitlab-com/marketing/corporate_marketing/developer-evangelism/code/docker-hub-limit-exporter). 
+This repository enables prometheus scrapping of dockerhub rate limits by providing a ready to use docker image and helm chart. 
+
+You can find more background information in this blog post: https://blog.viadee.de/en/monitoring-the-docker-hub-rate-limit-with-prometheus
+
+Note: The content of this repository is based on the work done by gitlab as described in their [blogpost](https://about.gitlab.com/blog/2020/11/18/docker-hub-rate-limit-monitoring/). The original source of the Python script can be found [here](https://gitlab.com/gitlab-com/marketing/corporate_marketing/developer-evangelism/code/docker-hub-limit-exporter). 
 
 ## How to install the chart
 
