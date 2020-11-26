@@ -35,7 +35,7 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
-              containerPort: {{ .Values.config.exporterPort }}
+              containerPort: {{ default 80 .Values.config.exporterPort }}
               protocol: TCP
           livenessProbe:
             httpGet:
