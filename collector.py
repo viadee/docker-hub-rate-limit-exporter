@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+# Source: https://gitlab.com/gitlab-com/marketing/corporate_marketing/developer-evangelism/code/docker-hub-limit-exporter
+
 # Info: Prometheus Exporter to fetch the Docker Hub Rate Limits metrics
 # License: MIT, Copyright (c) 2020-present GitLab B.V.
 # Author: Michael Friedrich <mfriedrich@gitlab.com>
