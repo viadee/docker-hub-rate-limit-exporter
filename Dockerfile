@@ -1,12 +1,17 @@
-FROM python:3
+FROM python:3-alpine as build
 
-RUN mkdir /src
-COPY ./requirements.txt /src
-RUN pip install -r /src/requirements.txt
-COPY ./collector.py /src
+WORKDIR /install
+
+COPY ./requirements.txt /requirements.txt
+RUN pip install --prefix=/install -r /requirements.txt
+
+FROM python:3-alpine
 
 WORKDIR /src
 ENV PYTHONPATH '/src/'
+
+COPY --from=build /install /usr/local
+COPY ./collector.py /src
 
 EXPOSE 80/TCP
 
