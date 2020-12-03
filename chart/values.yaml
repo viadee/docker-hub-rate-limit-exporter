@@ -18,6 +18,13 @@ imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
+serviceMonitor:
+    enabled: true
+    additionalLabels: {}
+    # namespace: monitoring
+    # interval: 30s
+    # scrapeTimeout: 10s
+
 serviceAccount:
     # Specifies whether a service account should be created
     create: false
