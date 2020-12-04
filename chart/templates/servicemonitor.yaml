@@ -27,5 +27,5 @@ spec:
       - {{ .Release.Namespace }}
   selector:
     matchLabels:
-    {{- include "docker-hub-rate-limit-exporter.labels" . | nindent 6 }}
+      {{- include "docker-hub-rate-limit-exporter.selectorLabels" . | nindent 6 }}
 {{- end }}
