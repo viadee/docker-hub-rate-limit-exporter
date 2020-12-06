@@ -2,11 +2,11 @@
 
 ![](teaser.jpg)
 
-This repository enables prometheus scrapping of dockerhub rate limits by providing a ready to use docker image and helm chart. 
+This repository enables prometheus scrapping of dockerhub rate limits by providing a ready to use docker image and helm chart.
 
 You can find more background information in this blog post: https://blog.viadee.de/en/monitoring-the-docker-hub-rate-limit-with-prometheus
 
-Note: The content of this repository is based on the work done by gitlab as described in their [blogpost](https://about.gitlab.com/blog/2020/11/18/docker-hub-rate-limit-monitoring/). The original source of the Python script can be found [here](https://gitlab.com/gitlab-com/marketing/corporate_marketing/developer-evangelism/code/docker-hub-limit-exporter). 
+Note: The content of this repository is based on the work done by gitlab as described in their [blogpost](https://about.gitlab.com/blog/2020/11/18/docker-hub-rate-limit-monitoring/). The original source of the Python script can be found [here](https://gitlab.com/gitlab-com/marketing/corporate_marketing/developer-evangelism/code/docker-hub-limit-exporter).
 
 ## How to install the chart
 
@@ -23,33 +23,19 @@ If your kubernetes cluster does not authenticate with dockerhub you don't need t
 
 1. Create a helm value file as per the example in this repository (see: chart/values.yaml)
 2. Fill in the variables `dockerhubUsername` and `dockerhubPassword`. It is recommended to use a dockerhub access token for the password.
-3. run `helm install <release name> docker-hub-rate-limit-exporter/helm --namespace=<desired namespace> -f <name of value file>`
+3. Run `helm upgrade <release name> docker-hub-rate-limit-exporter/chart --install --namespace=<desired namespace> -f <name of value file>`
 
 ## How to tell prometheus to scrap the metrics
 
-We recommend you to use the prometheus kubernetes operator to run prometheus in your cluster (see: https://github.com/prometheus-operator/prometheus-operator). If you run the operator you can create a `ServiceMonitor` resource to tell prometheus how to scrap the docker-hub-rate-limit-exporter. See the example below:
+We recommend you to use the prometheus kubernetes operator to run prometheus in your cluster (see: https://github.com/prometheus-operator/prometheus-operator). If you run the operator you can create a `ServiceMonitor` resource to tell prometheus how to scrap the docker-hub-rate-limit-exporter. To do so follow the steps below:
 
-```
-apiVersion: monitoring.coreos.com/v1
-kind: ServiceMonitor
-metadata:
-    name: docker-hub-rate-limit-exporter
-    labels:
-        app: docker-hub-rate-limit-exporter
-        # you may need to add further labels here depending on your prometheus configuration
-spec:
-    selector:
-        matchLabels:
-            app.kubernetes.io/name: docker-hub-rate-limit-exporter
-    endpoints:
-        - port: http
-          path: "/"
-          interval: 10s
-    jobLabel: docker-hub-rate-limit-exporter
-    namespaceSelector: ### this part can be ommited if your ServiceMonitor resource lives in the same namespace as the docker-hub-rate-limit-exporter service
-        matchNames:
-            - <the namespace where the docker-hub-rate-limit-exporter lives>
-```
+1. Create a helm value file as per the example in this repository or use the value file from above (see: chart/values.yaml)
+2. Set the variable `serviceMonitor.enabled` to true
+3. Depending on the configuration of your Prometheus Operator you might need to configure the `serviceMonitor.additionalLabels` section to tell prometheus to scrape from this `ServiceMonitor` resource.
+4. Alternatively, you might have configured the Prometheus Operator to consider all `ServiceMonitors` in a specific namespace. In that case you can set the `serviceMonitor.namespace` option to deploy the `ServiceMonitor` resource in that namespace.
+5. Run `helm upgrade <release name> docker-hub-rate-limit-exporter/chart --install --namespace=<desired namespace> -f <name of value file>`
+
+If you are not using the prometheus kubernetes operator you would need to configure prometheus manually to scrap the metrics.
 
 ## Collaboration
 
