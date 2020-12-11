@@ -1,41 +1,43 @@
+{{- range .Values.configs }}
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "docker-hub-rate-limit-exporter.fullname" . }}
+  name: {{ include "docker-hub-rate-limit-exporter.fullname" $ }}-{{ .name }}
   labels:
-    {{- include "docker-hub-rate-limit-exporter.labels" . | nindent 4 }}
+    {{- include "docker-hub-rate-limit-exporter.labels" $ | nindent 4 }}
 spec:
-  replicas: {{ .Values.replicaCount }}
+  replicas: {{ $.Values.replicaCount }}
   selector:
     matchLabels:
-      {{- include "docker-hub-rate-limit-exporter.selectorLabels" . | nindent 6 }}
+      {{- include "docker-hub-rate-limit-exporter.selectorLabels" $ | nindent 6 }}
+      instance: {{ .name }}
   template:
     metadata:
       annotations:
-        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
-        checksum/secret: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
-        {{- with .Values.podAnnotations }}
+        {{- with $.Values.podAnnotations }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
       labels:
-        {{- include "docker-hub-rate-limit-exporter.selectorLabels" . | nindent 8 }}
+        {{- include "docker-hub-rate-limit-exporter.selectorLabels" $ | nindent 8 }}
+        instance: {{ .name }}
     spec:
-      {{- with .Values.imagePullSecrets }}
+      {{- with $.Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "docker-hub-rate-limit-exporter.serviceAccountName" . }}
+      serviceAccountName: {{ include "docker-hub-rate-limit-exporter.serviceAccountName" $ }}
       securityContext:
-        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+        {{- toYaml $.Values.podSecurityContext | nindent 8 }}
       containers:
-        - name: {{ .Chart.Name }}
+        - name: {{ $.Chart.Name }}
           securityContext:
-            {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+            {{- toYaml $.Values.securityContext | nindent 12 }}
+          image: "{{ $.Values.image.repository }}:{{ $.Values.image.tag | default $.Chart.AppVersion }}"
+          imagePullPolicy: {{ $.Values.image.pullPolicy }}
           ports:
             - name: http
-              containerPort: {{ default 80 .Values.config.exporterPort }}
+              containerPort: {{ default 80 .exporterPort }}
               protocol: TCP
           livenessProbe:
             httpGet:
@@ -48,37 +50,38 @@ spec:
               port: http
             timeoutSeconds: 5
           resources:
-            {{- toYaml .Values.resources | nindent 12 }}
+            {{- toYaml $.Values.resources | nindent 12 }}
           env:
             - name: DOCKERHUB_USERNAME
               valueFrom:
                 configMapKeyRef:
-                  name: {{ include "docker-hub-rate-limit-exporter.fullname" . }}-configmap
+                  name: {{ include "docker-hub-rate-limit-exporter.fullname" $ }}-{{ .name }}-configmap
                   key: dockerhub-username
             - name: DOCKERHUB_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "docker-hub-rate-limit-exporter.fullname" . }}-secret
+                  name: {{ include "docker-hub-rate-limit-exporter.fullname" $ }}-{{ .name }}-secret
                   key: dockerhub-password
             - name: DOCKERHUB_EXPORTER_VERBOSE
               valueFrom:
                 configMapKeyRef:
-                  name: {{ include "docker-hub-rate-limit-exporter.fullname" . }}-configmap
+                  name: {{ include "docker-hub-rate-limit-exporter.fullname" $ }}-{{ .name }}-configmap
                   key: exporter-verbosity
             - name: DOCKERHUB_EXPORTER_PORT
               valueFrom:
                 configMapKeyRef:
-                  name: {{ include "docker-hub-rate-limit-exporter.fullname" . }}-configmap
+                  name: {{ include "docker-hub-rate-limit-exporter.fullname" $ }}-{{ .name }}-configmap
                   key: exporter-port
-      {{- with .Values.nodeSelector }}
+      {{- with $.Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.affinity }}
+      {{- with $.Values.affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.tolerations }}
+      {{- with $.Values.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+{{- end }}

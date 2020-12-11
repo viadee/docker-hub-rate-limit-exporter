@@ -1,10 +1,13 @@
+{{- range .Values.configs }}
+---
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ include "docker-hub-rate-limit-exporter.fullname" . }}-configmap
+  name: {{ include "docker-hub-rate-limit-exporter.fullname" $ }}-{{ .name }}-configmap
   labels:
-    {{- include "docker-hub-rate-limit-exporter.labels" . | nindent 4 }}
+    {{- include "docker-hub-rate-limit-exporter.labels" $ | nindent 4 }}
 data:
-  exporter-port: {{ default "80" .Values.config.exporterPort | quote }}
-  exporter-verbosity: {{ default "1" .Values.config.exporterVerbosity | quote }}
-  dockerhub-username: {{ default "" .Values.config.dockerhubUsername | quote }}
+  exporter-port: {{ default "80" .exporterPort | quote }}
+  exporter-verbosity: {{ default "1" .exporterVerbosity | quote }}
+  dockerhub-username: {{ default "" .dockerhubUsername | quote }}
+{{- end }}
