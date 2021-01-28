@@ -32,3 +32,7 @@ The command removes all the Kubernetes components associated with the chart and 
 | `serviceMonitor.namespace`        | The namespace into which the servicemonitor is deployed. If not set, will the same as the namespace of this chart | `nil`   |
 | `serviceMonitor.interval`         | The interval with which prometheus will scrape                                                                    | `30s`   |
 | `serviceMonitor.scrapeTimeout`    | The timeout for the scrape request                                                                                | `10s`   |
+
+## Attribution
+
+<div>Icons made by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
