@@ -8,7 +8,7 @@ config:
     dockerhubUsername: ## put your dockerhub username here
     dockerhubPassword: ## put your dockerhub password here
 
-replicaCount: 2
+replicaCount: 1
 
 image:
     repository: viadee/docker-hub-rate-limit-exporter
