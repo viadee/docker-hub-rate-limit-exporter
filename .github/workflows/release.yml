@@ -24,12 +24,6 @@ jobs:
         with:
           version: v3.4.0
 
-      - name: Restructure Directory
-        run: |
-          mkdir -p charts/docker-hub-rate-limit-exporter 
-          cp -r chart/* charts/docker-hub-rate-limit-exporter  
-        shell: bash
-
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@v1.1.0
         env:
