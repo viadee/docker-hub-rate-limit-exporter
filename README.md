@@ -17,6 +17,11 @@ You can install the chart by downloading this repository and running the helm in
 
 By running the above command you will install the docker-hub-rate-limit-exporter into your cluster. It will expose the dockerhub limits in the prometheus format.
 
+The helm chart can be installed installed through a helm chart repository hosten on a github page in this repository. To install follow the next steps:
+
+1. run `helm repo add viadee https://viadee.github.io/docker-hub-rate-limit-exporter`
+2. run `helm install viadee/docker-hub-rate-limit-exporter`
+
 ## How to configure your docker credentials
 
 If your kubernetes cluster does not authenticate with dockerhub you don't need to do anything here. However, if it does, you need to configure the crendetials with helm values. This is because the docker-hub-rate-limit-exporter does not use the dockerhub account assosiated with the docker context of your kubernetes-cluster. You can configure it to do so by following the steps below:
