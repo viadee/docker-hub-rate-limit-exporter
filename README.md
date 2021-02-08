@@ -10,7 +10,7 @@ Note: The content of this repository is based on the work done by gitlab as desc
 
 ## How to install the chart
 
-The helm chart can be installed through a helm chart repository hosten on a github page in this repository. To install follow the next steps:
+The helm chart can be installed through a helm chart repository hosted on a github page in this repository. To install follow the next steps:
 
 1. run `helm repo add viadee https://viadee.github.io/docker-hub-rate-limit-exporter`
 2. run `helm install viadee/docker-hub-rate-limit-exporter`
