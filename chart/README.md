@@ -2,12 +2,10 @@
 
 ## How to install the chart
 
-You can install the chart by downloading this repository and running the helm install command. Follow the steps below:
+The helm chart can be installed through a helm chart repository hosted on a github page in this repository. To install follow the next steps:
 
-1. run `git clone https://github.com/viadee/docker-hub-rate-limit-exporter.git`
-2. run `helm install <release name> docker-hub-rate-limit-exporter/chart --namespace=<desired namespace>`
-
-By running the above command you will install the docker-hub-rate-limit-exporter into your cluster. It will expose the dockerhub limits in the prometheus format.
+1. run `helm repo add viadee https://viadee.github.io/docker-hub-rate-limit-exporter`
+2. run `helm install viadee/docker-hub-rate-limit-exporter`
 
 ## Uninstalling the Chart
 
