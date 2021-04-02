@@ -10,6 +10,7 @@ import time
 import requests
 import json
 import os
+import jwt
 from prometheus_client.core import GaugeMetricFamily, REGISTRY
 from prometheus_client import start_http_server
 
@@ -29,6 +30,9 @@ class DockerHubCollector(object):
         self.password = password
 
         self.verbose = verbose
+        
+        self.previous_limit = None
+        self.previous_remaining = None
 
     def do_verbose(self, text):
         if self.verbose:
@@ -67,6 +71,12 @@ class DockerHubCollector(object):
         if not token:
             raise Exception('Cannot obtain token from Docker Hub. Please try again!')
 
+        # extract content from jwt token
+        jwtContent = jwt.decode(token, options={"verify_signature": False})
+        if not self.previous_limit:
+            self.previous_limit = jwtContent.get('access')[0].get('parameters').get('pull_limit')
+            self.previous_remaining = self.previous_limit
+
         return token
 
     ## Test against registry
@@ -102,10 +112,20 @@ class DockerHubCollector(object):
     def collect(self):
         (limit, remaining, reset) = self.get_registry_limits()
 
+        if len(str(remaining)) == 0:
+            remaining = self.previous_remaining
+        else:
+            self.previous_remaining = remaining
+
         gr = GaugeMetricFamily("dockerhub_limit_remaining_requests_total", 'Docker Hub Rate Limit Remaining Requests', labels=['limit'])
         gr.add_metric(["remaining_requests_total"], remaining)
 
         yield gr
+
+        if len(str(limit)) == 0:
+            limit = self.previous_limit
+        else:
+            self.previous_limit = limit
 
         gl = GaugeMetricFamily("dockerhub_limit_max_requests_total", 'Docker Hub Rate Limit Maximum Requests', labels=['limit'])
         gl.add_metric(["max_requests_total"], limit)

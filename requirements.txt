@@ -1,2 +1,3 @@
 requests
 prometheus_client
+pyjwt
