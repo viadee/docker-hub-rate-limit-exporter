@@ -40,3 +40,5 @@ If you are not using the prometheus kubernetes operator you would need to config
 This helm chart was build by viadee Unternehmensberatung AG. If you are interested to find out what else we are doing, check out our website: https://www.viadee.de/en/solutions/cloud
 
 If you have any feedback, ideas or extensions feel free to reach out and create a GitHub issue.
+
+trigger
