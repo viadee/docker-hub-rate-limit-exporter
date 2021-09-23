@@ -9,6 +9,9 @@ spec:
   selector:
     matchLabels:
       {{- include "docker-hub-rate-limit-exporter.selectorLabels" . | nindent 6 }}
+      {{- if .Values.podLabels }}
+      {{- toYaml .Values.podLabels | nindent 6 }}
+      {{- end }}
   template:
     metadata:
       annotations:
