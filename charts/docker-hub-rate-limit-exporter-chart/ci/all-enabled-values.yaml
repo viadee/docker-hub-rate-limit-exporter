@@ -9,11 +9,11 @@ config:
         password: "" ## put your dockerhub password here
 
 deployment:
-    enabled: true
+    enabled: false
     replicaCount: 1
 
 daemonset:
-    enabled: false
+    enabled: true
     updateStrategy:
         type: RollingUpdate
         rollingUpdate:
@@ -29,7 +29,7 @@ nameOverride: ""
 fullnameOverride: ""
 
 serviceMonitor:
-    enabled: false
+    enabled: true
     additionalLabels: {}
     namespace: ""
 
@@ -47,22 +47,30 @@ serviceMonitor:
     ##
     selectorOverride: {}
 
-    relabelings: []
+    relabelings:
+      - action: replace
+        sourceLabels:
+          - __meta_kubernetes_pod_node_name
+        targetLabel: instance
+      - action: replace
+        sourceLabels:
+          - __meta_kubernetes_pod_host_ip
+        targetLabel: host_ip
     metricRelabelings: []
     interval: ""
-    scrapeTimeout: 10s
+    scrapeTimeout: 25s
 
 serviceAccount:
     # Specifies whether a service account should be created
-    create: false
+    create: true
     # Annotations to add to the service account
     annotations: {}
     # The name of the service account to use.
     # If not set and create is true, a name is generated using the fullname template
     name: ""
-    imagePullSecrets: []
 
-podAnnotations: {}
+podAnnotations:
+  sidecar.istio.io/inject: "false"
 
 securityContext:
   fsGroup: 65534
@@ -70,10 +78,10 @@ securityContext:
   runAsNonRoot: true
   runAsUser: 65534
 
-containerSecurityContext: {}
-  # capabilities:
-  #   add:
-  #   - SYS_TIME
+containerSecurityContext:
+  capabilities:
+    add:
+    - SYS_TIME
 
 service:
   type: ClusterIP
@@ -100,3 +108,9 @@ tolerations: []
 priorityClassName: ""
 
 affinity: {}
+
+# Expose the service to the host network
+hostNetwork: false
+
+# Share the host process ID namespace
+hostPID: true

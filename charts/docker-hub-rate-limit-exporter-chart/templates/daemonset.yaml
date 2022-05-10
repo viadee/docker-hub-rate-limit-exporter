@@ -1,15 +1,18 @@
-{{- if .Values.deployment.enabled }}
+{{- if .Values.daemonset.enabled }}
 apiVersion: apps/v1
-kind: Deployment
+kind: DaemonSet
 metadata:
   name: {{ include "docker-hub-rate-limit-exporter.fullname" . }}
   labels:
     {{- include "docker-hub-rate-limit-exporter.labels" . | nindent 4 }}
 spec:
-  replicas: {{ .Values.deployment.replicaCount }}
   selector:
     matchLabels:
       {{- include "docker-hub-rate-limit-exporter.selectorLabels" . | nindent 6 }}
+  {{- if .Values.daemonset.updateStrategy }}
+  updateStrategy:
+{{ toYaml .Values.daemonset.updateStrategy | indent 4 }}
+  {{- end }}
   template:
     metadata:
       labels:
@@ -89,5 +92,7 @@ spec:
       tolerations:
 {{ toYaml . | indent 8 }}
       {{- end }}
+      hostNetwork: {{ .Values.hostNetwork }}
+      hostPID: {{ .Values.hostPID }}
 
 {{- end }}
