@@ -119,7 +119,7 @@ if __name__ == '__main__':
     if not port:
         port = 80
 
-    start_http_server(int(port))
+    start_http_server(int(port),addr='::')
 
     verbose = os.environ.get('DOCKERHUB_EXPORTER_VERBOSE')
 
@@ -136,4 +136,3 @@ if __name__ == '__main__':
     while True:
         time.sleep(10)
         dhc.collect()
-
