@@ -20,8 +20,8 @@ spec:
       annotations:
         checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
         checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
-        {{- if .Values.podAnnotations }}
-        {{- toYaml .Values.podAnnotations | nindent 8 }}
+        {{- if .Values.daemonset.podAnnotations }}
+        {{- toYaml .Values.daemonset.podAnnotations | nindent 8 }}
         {{- end }}
     spec:
       {{- if .Values.imagePullSecrets }}
@@ -29,17 +29,18 @@ spec:
 {{ toYaml .Values.imagePullSecrets | indent 8 }}
       {{- end }}
       serviceAccountName: {{ include "docker-hub-rate-limit-exporter.serviceAccountName" . }}
-      {{- if .Values.securityContext }}
+      {{- if .Values.podSecurityContext }}
       securityContext:
-{{ toYaml .Values.securityContext | indent 8 }}
+{{ toYaml .Values.podSecurityContext | indent 8 }}
       {{- end }}
       {{- if .Values.priorityClassName }}
       priorityClassName: {{ .Values.priorityClassName }}
       {{- end }}
       containers:
         - name: {{ .Chart.Name }}
-          {{- with .Values.containerSecurityContext }}
-          securityContext: {{ toYaml . | nindent 12 }}
+          {{- if .Values.securityContext }}
+          securityContext:
+{{ toYaml .Values.securityContext | nindent 12 }}
           {{- end }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
@@ -51,19 +52,19 @@ spec:
             httpGet:
               path: /
               port: {{ .Values.service.port }}
-            timeoutSeconds: {{ .Values.service.timeoutSeconds }}
+            timeoutSeconds: {{ .Values.livenessProbeTimeoutSeconds }}
           readinessProbe:
             httpGet:
               path: /
               port: {{ .Values.service.port }}
-            timeoutSeconds: {{ .Values.service.timeoutSeconds }}
+            timeoutSeconds: {{ .Values.readinessProbeTimeoutSeconds }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           env:
             - name: DOCKERHUB_USERNAME
               valueFrom:
-                configMapKeyRef:
-                  name: {{ include "docker-hub-rate-limit-exporter.fullname" . }}-configmap
+                secretKeyRef:
+                  name: {{ include "docker-hub-rate-limit-exporter.fullname" . }}-secret
                   key: dockerhub-username
             - name: DOCKERHUB_PASSWORD
               valueFrom:
@@ -80,17 +81,17 @@ spec:
                 configMapKeyRef:
                   name: {{ include "docker-hub-rate-limit-exporter.fullname" . }}-configmap
                   key: exporter-port
-      {{- if .Values.nodeSelector }}
+      {{- if .Values.daemonset.nodeSelector }}
       nodeSelector:
-{{ toYaml .Values.nodeSelector | indent 8 }}
+{{ toYaml .Values.daemonset.nodeSelector | indent 8 }}
       {{- end }}
-      {{- if .Values.affinity }}
+      {{- if .Values.daemonset.affinity }}
       affinity:
-{{ toYaml .Values.affinity | indent 8 }}
+{{ toYaml .Values.daemonset.affinity | indent 8 }}
       {{- end }}
-      {{- with .Values.tolerations }}
+      {{- if .Values.daemonset.tolerations }}
       tolerations:
-{{ toYaml . | indent 8 }}
+{{ toYaml .Values.daemonset.tolerations | indent 8 }}
       {{- end }}
       hostNetwork: {{ .Values.hostNetwork }}
       hostPID: {{ .Values.hostPID }}

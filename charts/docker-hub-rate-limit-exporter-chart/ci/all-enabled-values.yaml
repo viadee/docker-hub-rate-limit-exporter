@@ -2,22 +2,45 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-config:
-    verbosity: 1 ## the loglevel
-    dockerhub:
-        username: "" ## put your dockerhub username here
-        password: "" ## put your dockerhub password here
+# Commonly used for authenticated users
+deployments:
+    default:
+        enabled: true
+        replicaCount: 1
+        podAnnotations: {}
+        config:
+            # Log level of the exporter
+            verbosity: 1
+            dockerhub:
+                username: ""
+                password: ""
+        # nodeSelector:
+        #     node-role.kubernetes.io/docker-hub-authenticated: "true"
 
-deployment:
-    enabled: false
-    replicaCount: 1
-
+# Commonly used for anonymous users
 daemonset:
     enabled: true
     updateStrategy:
         type: RollingUpdate
         rollingUpdate:
             maxUnavailable: 1
+    podAnnotations: {}
+    config:
+        # Log level of the exporter
+        verbosity: 1
+        dockerhub:
+            username: ""
+            password: ""
+    # affinity:
+    #     nodeAffinity:
+    #         requiredDuringSchedulingIgnoredDuringExecution:
+    #             nodeSelectorTerms:
+    #                 - matchExpressions:
+    #                     - key: node-role.kubernetes.io/docker-hub-authenticated
+    #                       operator: NotIn
+    #                       values:
+    #                           - "true"
+
 
 image:
     repository: viadee/docker-hub-rate-limit-exporter
@@ -48,14 +71,14 @@ serviceMonitor:
     selectorOverride: {}
 
     relabelings:
-      - action: replace
-        sourceLabels:
-          - __meta_kubernetes_pod_node_name
-        targetLabel: instance
-      - action: replace
-        sourceLabels:
-          - __meta_kubernetes_pod_host_ip
-        targetLabel: host_ip
+        - action: replace
+          sourceLabels:
+              - __meta_kubernetes_pod_node_name
+          targetLabel: instance
+        - action: replace
+          sourceLabels:
+              - __meta_kubernetes_pod_host_ip
+          targetLabel: host_ip
     metricRelabelings: []
     interval: ""
     scrapeTimeout: 25s
@@ -70,28 +93,30 @@ serviceAccount:
     name: ""
 
 podAnnotations:
-  sidecar.istio.io/inject: "false"
+    sidecar.istio.io/inject: "false"
+
+podSecurityContext:
+    fsGroup: 65534
+    runAsGroup: 65534
+    runAsNonRoot: true
+    runAsUser: 65534
 
 securityContext:
-  fsGroup: 65534
-  runAsGroup: 65534
-  runAsNonRoot: true
-  runAsUser: 65534
-
-containerSecurityContext:
-  capabilities:
-    add:
-    - SYS_TIME
+    capabilities:
+        add:
+            - SYS_TIME
 
 service:
-  type: ClusterIP
-  port: 9100
-  targetPort: 9100
-  nodePort:
-  portName: metrics
-  timeoutSeconds: 5
-  annotations:
-    prometheus.io/scrape: "true"
+    type: ClusterIP
+    port: 80
+    targetPort: 80
+    nodePort:
+    portName: metrics
+    annotations: {}
+
+livenessProbeTimeoutSeconds: 5
+
+readinessProbeTimeoutSeconds: 5
 
 resources:
     limits:

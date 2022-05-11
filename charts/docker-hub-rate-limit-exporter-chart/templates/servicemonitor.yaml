@@ -20,6 +20,9 @@ spec:
     {{ else }}
       {{- include "docker-hub-rate-limit-exporter.selectorLabels" . | nindent 6 }}
     {{- end }}
+  namespaceSelector:
+    matchNames:
+      - {{ .Release.Namespace }}
   endpoints:
     - port: {{ .Values.service.portName }}
       scheme: {{ .Values.serviceMonitor.scheme }}

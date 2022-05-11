@@ -2,22 +2,14 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-config:
-    verbosity: 1 ## the loglevel
-    dockerhub:
-        username: "" ## put your dockerhub username here
-        password: "" ## put your dockerhub password here
+# Commonly used for authenticated users
+deployments:
+    default:
+        enabled: true
 
-deployment:
-    enabled: true
-    replicaCount: 1
-
+# Commonly used for anonymous users
 daemonset:
     enabled: false
-    updateStrategy:
-        type: RollingUpdate
-        rollingUpdate:
-            maxUnavailable: 1
 
 image:
     repository: viadee/docker-hub-rate-limit-exporter
@@ -62,28 +54,28 @@ serviceAccount:
     name: ""
     imagePullSecrets: []
 
-podAnnotations: {}
+podSecurityContext: {}
+    # fsGroup: 65534
+    # runAsGroup: 65534
+    # runAsNonRoot: true
+    # runAsUser: 65534
 
-securityContext:
-  fsGroup: 65534
-  runAsGroup: 65534
-  runAsNonRoot: true
-  runAsUser: 65534
-
-containerSecurityContext: {}
+securityContext: {}
   # capabilities:
   #   add:
   #   - SYS_TIME
 
 service:
-  type: ClusterIP
-  port: 9100
-  targetPort: 9100
-  nodePort:
-  portName: metrics
-  timeoutSeconds: 5
-  annotations:
-    prometheus.io/scrape: "true"
+    type: ClusterIP
+    port: 80
+    targetPort: 80
+    nodePort:
+    portName: metrics
+    annotations: {}
+
+livenessProbeTimeoutSeconds: 5
+
+readinessProbeTimeoutSeconds: 5
 
 resources:
     limits:
