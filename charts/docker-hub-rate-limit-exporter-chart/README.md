@@ -19,17 +19,18 @@ The command removes all the Kubernetes components associated with the chart and 
 
 ## Configuration
 
-| Parameter                         | Description                                                                                                       | Default |
-| --------------------------------- | ----------------------------------------------------------------------------------------------------------------- | ------- |
-| `config.exporterPort`             | Port the deployment exposes                                                                                       | `80`    |
-| `config.exporterVerbosity`        | Loglevel of the deployment                                                                                        | `1`     |
-| `config.dockerhubUsername`        | To authenticate with dockerhub                                                                                    | `nil`   |
-| `config.dockerhubPassword`        | To authenticate with dockerhub (use access token)                                                                 | `nil`   |
-| `serviceMonitor.enabled`          | If true, creates a ServiceMonitor instance                                                                        | `false` |
-| `serviceMonitor.additionalLabels` | Configure additional labels for the servicemonitor                                                                | `{}`    |
-| `serviceMonitor.namespace`        | The namespace into which the servicemonitor is deployed. If not set, will the same as the namespace of this chart | `nil`   |
-| `serviceMonitor.interval`         | The interval with which prometheus will scrape                                                                    | `30s`   |
-| `serviceMonitor.scrapeTimeout`    | The timeout for the scrape request                                                                                | `10s`   |
+| Parameter                         | Description                                                                                                                          | Default |
+| --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ | ------- |
+| `deployment.enabled`              | If true, docker-hub-rate-limit-exporter will be deployed as a kubernetes Deployment                                                  | `1`     |
+| `daemonset.enabled`               | If true, docker-hub-rate-limit-exporter will be deployed as a kubernetes Deamonset. Useful if kubernetes nodes have an own public IP | `1`     |
+| `config.verbosity`                | Loglevel of the deployment                                                                                                           | `1`     |
+| `config.dockerhub.username`       | To authenticate with dockerhub                                                                                                       | `nil`   |
+| `config.dockerhub.password`       | To authenticate with dockerhub (use access token)                                                                                    | `nil`   |
+| `serviceMonitor.enabled`          | If true, creates a ServiceMonitor instance                                                                                           | `false` |
+| `serviceMonitor.additionalLabels` | Configure additional labels for the servicemonitor                                                                                   | `{}`    |
+| `serviceMonitor.namespace`        | The namespace into which the servicemonitor is deployed. If not set, will the same as the namespace of this chart                    | `nil`   |
+| `serviceMonitor.interval`         | The interval with which prometheus will scrape                                                                                       | `30s`   |
+| `serviceMonitor.scrapeTimeout`    | The timeout for the scrape request                                                                                                   | `10s`   |
 
 ## Attribution
 
