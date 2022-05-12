@@ -1,0 +1,8 @@
+# See https://github.com/helm/chart-testing#configuration
+remote: origin
+target-branch: main
+chart-dirs:
+  - charts
+chart-repos:
+  - viadee=https://viadee.github.io/docker-hub-rate-limit-exporter
+helm-extra-args: "--timeout 600s"

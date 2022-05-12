@@ -11,9 +11,17 @@ config:
 
 deployment:
     enabled: true
+    replicaCount: 1
+    podAnnotations: {}
 
 daemonset:
-    enabled: false
+    enabled: true
+    updateStrategy:
+        type: RollingUpdate
+        rollingUpdate:
+            maxUnavailable: 1
+    podAnnotations: {}
+
 
 image:
     repository: viadee/docker-hub-rate-limit-exporter
@@ -25,7 +33,7 @@ nameOverride: ""
 fullnameOverride: ""
 
 serviceMonitor:
-    enabled: false
+    enabled: true
     additionalLabels: {}
     namespace: ""
 
@@ -43,31 +51,41 @@ serviceMonitor:
     ##
     selectorOverride: {}
 
-    relabelings: []
+    relabelings:
+        - action: replace
+          sourceLabels:
+              - __meta_kubernetes_pod_node_name
+          targetLabel: instance
+        - action: replace
+          sourceLabels:
+              - __meta_kubernetes_pod_host_ip
+          targetLabel: host_ip
     metricRelabelings: []
     interval: ""
-    scrapeTimeout: 10s
+    scrapeTimeout: 25s
 
 serviceAccount:
     # Specifies whether a service account should be created
-    create: false
+    create: true
     # Annotations to add to the service account
     annotations: {}
     # The name of the service account to use.
     # If not set and create is true, a name is generated using the fullname template
     name: ""
-    imagePullSecrets: []
 
-podSecurityContext: {}
-    # fsGroup: 65534
-    # runAsGroup: 65534
-    # runAsNonRoot: true
-    # runAsUser: 65534
+podAnnotations:
+    sidecar.istio.io/inject: "false"
 
-securityContext: {}
-  # capabilities:
-  #   add:
-  #   - SYS_TIME
+podSecurityContext:
+    fsGroup: 65534
+    runAsGroup: 65534
+    runAsNonRoot: true
+    runAsUser: 65534
+
+securityContext:
+    capabilities:
+        add:
+            - SYS_TIME
 
 service:
     type: ClusterIP
@@ -96,3 +114,9 @@ tolerations: []
 priorityClassName: ""
 
 affinity: {}
+
+# Expose the service to the host network
+hostNetwork: false
+
+# Share the host process ID namespace
+hostPID: true

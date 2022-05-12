@@ -8,6 +8,10 @@ You can find more background information in this blog post: https://blog.viadee.
 
 Note: The content of this repository is based on the work done by gitlab as described in their [blogpost](https://about.gitlab.com/blog/2020/11/18/docker-hub-rate-limit-monitoring/). The original source of the Python script can be found [here](https://gitlab.com/gitlab-com/marketing/corporate_marketing/developer-evangelism/code/docker-hub-limit-exporter).
 
+## Upgrade from 0.2.x to 0.3.0
+
+In 0.3.0 the config path for supplying the dockerhub credentials has been changed. If you monitor authenticated requests and you want to update to 0.3.0, then you have to change `config.dockerhubUsername` and `config.dockerhubPassword` to `config.dockerhub.username` and `config.dockerhub.password`.  
+
 ## How to install the chart
 
 The helm chart can be installed through a helm chart repository hosted on a github page in this repository. To install follow the next steps:
@@ -20,7 +24,7 @@ The helm chart can be installed through a helm chart repository hosted on a gith
 If your kubernetes cluster does not authenticate with dockerhub you don't need to do anything here. However, if it does, you need to configure the crendetials with helm values. This is because the docker-hub-rate-limit-exporter does not use the dockerhub account assosiated with the docker context of your kubernetes-cluster. You can configure it to do so by following the steps below:
 
 1. Create a helm value file as per the example in this repository (see: chart/values.yaml)
-2. Fill in the variables `dockerhubUsername` and `dockerhubPassword`. It is recommended to use a dockerhub access token for the password.
+2. Fill in the variables `config.dockerhub.username` and `config.dockerhub.password`. It is recommended to use a dockerhub access token for the password.
 3. Run `helm upgrade <release name> viadee/docker-hub-rate-limit-exporter --install --namespace=<desired namespace> -f <name of value file>`
 
 ## How to tell prometheus to scrap the metrics
