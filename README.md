@@ -8,6 +8,10 @@ You can find more background information in this blog post: https://blog.viadee.
 
 Note: The content of this repository is based on the work done by gitlab as described in their [blogpost](https://about.gitlab.com/blog/2020/11/18/docker-hub-rate-limit-monitoring/). The original source of the Python script can be found [here](https://gitlab.com/gitlab-com/marketing/corporate_marketing/developer-evangelism/code/docker-hub-limit-exporter).
 
+## Upgrade from 0.2.x to 0.3.0
+
+In 0.3.0 the config path for supplying the dockerhub credentials has been changed. If you monitor authenticated requests and you want to update to 0.3.0, then you have to change `config.dockerhubUsername` and `config.dockerhubPassword` to `config.dockerhub.username` and `config.dockerhub.password`.  
+
 ## How to install the chart
 
 The helm chart can be installed through a helm chart repository hosted on a github page in this repository. To install follow the next steps:
