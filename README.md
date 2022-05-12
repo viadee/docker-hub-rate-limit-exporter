@@ -20,7 +20,7 @@ The helm chart can be installed through a helm chart repository hosted on a gith
 If your kubernetes cluster does not authenticate with dockerhub you don't need to do anything here. However, if it does, you need to configure the crendetials with helm values. This is because the docker-hub-rate-limit-exporter does not use the dockerhub account assosiated with the docker context of your kubernetes-cluster. You can configure it to do so by following the steps below:
 
 1. Create a helm value file as per the example in this repository (see: chart/values.yaml)
-2. Fill in the variables `dockerhubUsername` and `dockerhubPassword`. It is recommended to use a dockerhub access token for the password.
+2. Fill in the variables `config.dockerhub.username` and `config.dockerhub.password`. It is recommended to use a dockerhub access token for the password.
 3. Run `helm upgrade <release name> viadee/docker-hub-rate-limit-exporter --install --namespace=<desired namespace> -f <name of value file>`
 
 ## How to tell prometheus to scrap the metrics
