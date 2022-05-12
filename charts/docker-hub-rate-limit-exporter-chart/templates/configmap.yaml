@@ -1,23 +1,4 @@
-{{- range $deploymentKey, $deployment := .Values.deployments }}
-{{- if $deployment.enabled }}
-
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: {{ include "docker-hub-rate-limit-exporter.fullname" $ }}-configmap-{{ $deploymentKey }}
-  labels:
-    {{- include "docker-hub-rate-limit-exporter.labels" $ | nindent 4 }}
-data:
-  exporter-port: {{ $.Values.service.targetPort | quote }}
-  {{- if $deployment.config }}
-  exporter-verbosity: {{ hasKey $deployment.config "verbosity" | ternary $deployment.config.verbosity 1 | quote }}
-  {{- end }}
-
----
-{{- end }}
-{{- end }}
-
-{{- if .Values.daemonset.enabled }}
+{{- $config := default dict .Values.config }}
 
 apiVersion: v1
 kind: ConfigMap
@@ -26,10 +7,5 @@ metadata:
   labels:
     {{- include "docker-hub-rate-limit-exporter.labels" . | nindent 4 }}
 data:
-  exporter-port: {{ $.Values.service.targetPort | quote }}
-  {{- if .Values.daemonset.config }}
-  exporter-verbosity: {{ hasKey .Values.daemonset.config "verbosity" | ternary .Values.daemonset.config.verbosity 1 | quote }}
-  {{- end }}
-
----
-{{- end }}
+  exporter-port: {{ .Values.service.targetPort | quote }}
+  exporter-verbosity: {{ hasKey $config "verbosity" | ternary $config.verbosity 1 | quote }}

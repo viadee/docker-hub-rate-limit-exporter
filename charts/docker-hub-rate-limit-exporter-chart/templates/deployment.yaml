@@ -1,100 +1,95 @@
-{{- range $deploymentKey, $deployment := .Values.deployments }}
-
-{{- if $deployment.enabled }}
+{{- if .Values.deployment.enabled }}
 
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "docker-hub-rate-limit-exporter.fullname" $ }}-{{ $deploymentKey }}
+  name: {{ include "docker-hub-rate-limit-exporter.fullname" . }}
   labels:
-    {{- include "docker-hub-rate-limit-exporter.labels" $ | nindent 4 }}
+    {{- include "docker-hub-rate-limit-exporter.labels" . | nindent 4 }}
 spec:
-  replicas: {{ hasKey $deployment "replicaCount" | ternary $deployment.replicaCount 1 }}
+  replicas: {{ hasKey .Values.deployment "replicaCount" | ternary .Values.deployment.replicaCount 1 }}
   selector:
     matchLabels:
-      {{- include "docker-hub-rate-limit-exporter.selectorLabels" $ | nindent 6 }}
+      {{- include "docker-hub-rate-limit-exporter.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
-        {{- include "docker-hub-rate-limit-exporter.selectorLabels" $ | nindent 8 }}
+        {{- include "docker-hub-rate-limit-exporter.selectorLabels" . | nindent 8 }}
       annotations:
-        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") $ | sha256sum }}
-        checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") $ | sha256sum }}
-        {{- if $deployment.podAnnotations }}
-        {{- toYaml $deployment.podAnnotations | nindent 8 }}
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+        checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
+        {{- if .Values.deployment.podAnnotations }}
+        {{- toYaml .Values.deployment.podAnnotations | nindent 8 }}
         {{- end }}
     spec:
-      {{- if $.Values.imagePullSecrets }}
+      {{- if .Values.imagePullSecrets }}
       imagePullSecrets:
-{{ toYaml $.Values.imagePullSecrets | indent 8 }}
+{{ toYaml .Values.imagePullSecrets | indent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "docker-hub-rate-limit-exporter.serviceAccountName" $ }}
-      {{- if $.Values.podSecurityContext }}
+      serviceAccountName: {{ include "docker-hub-rate-limit-exporter.serviceAccountName" . }}
+      {{- if .Values.podSecurityContext }}
       securityContext:
-{{ toYaml $.Values.podSecurityContext | indent 8 }}
+{{ toYaml .Values.podSecurityContext | indent 8 }}
       {{- end }}
-      {{- if $.Values.priorityClassName }}
-      priorityClassName: {{ $.Values.priorityClassName }}
+      {{- if .Values.priorityClassName }}
+      priorityClassName: {{ .Values.priorityClassName }}
       {{- end }}
       containers:
-        - name: {{ $.Chart.Name }}-{{ $deploymentKey }}
-          {{- if $.Values.securityContext }}
+        - name: {{ .Chart.Name }}
+          {{- if .Values.securityContext }}
           securityContext:
-{{ toYaml $.Values.securityContext | nindent 12 }}
+{{ toYaml .Values.securityContext | nindent 12 }}
           {{- end }}
-          image: "{{ $.Values.image.repository }}:{{ $.Values.image.tag | default $.Chart.AppVersion }}"
-          imagePullPolicy: {{ $.Values.image.pullPolicy }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
-            - name: {{ $.Values.service.portName }}
-              containerPort: {{ $.Values.service.port }}
+            - name: {{ .Values.service.portName }}
+              containerPort: {{ .Values.service.port }}
               protocol: TCP
           livenessProbe:
             httpGet:
               path: /
-              port: {{ $.Values.service.port }}
-            timeoutSeconds: {{ $.Values.livenessProbeTimeoutSeconds }}
+              port: {{ .Values.service.port }}
+            timeoutSeconds: {{ .Values.livenessProbeTimeoutSeconds }}
           readinessProbe:
             httpGet:
               path: /
-              port: {{ $.Values.service.port }}
-            timeoutSeconds: {{ $.Values.readinessProbeTimeoutSeconds }}
+              port: {{ .Values.service.port }}
+            timeoutSeconds: {{ .Values.readinessProbeTimeoutSeconds }}
           resources:
-            {{- toYaml $.Values.resources | nindent 12 }}
+            {{- toYaml .Values.resources | nindent 12 }}
           env:
             - name: DOCKERHUB_USERNAME
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "docker-hub-rate-limit-exporter.fullname" $ }}-secret-{{ $deploymentKey }}
+                  name: {{ include "docker-hub-rate-limit-exporter.fullname" . }}-secret
                   key: dockerhub-username
             - name: DOCKERHUB_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "docker-hub-rate-limit-exporter.fullname" $ }}-secret-{{ $deploymentKey }}
+                  name: {{ include "docker-hub-rate-limit-exporter.fullname" . }}-secret
                   key: dockerhub-password
             - name: DOCKERHUB_EXPORTER_VERBOSE
               valueFrom:
                 configMapKeyRef:
-                  name: {{ include "docker-hub-rate-limit-exporter.fullname" $ }}-configmap-{{ $deploymentKey }}
+                  name: {{ include "docker-hub-rate-limit-exporter.fullname" . }}-configmap
                   key: exporter-verbosity
             - name: DOCKERHUB_EXPORTER_PORT
               valueFrom:
                 configMapKeyRef:
-                  name: {{ include "docker-hub-rate-limit-exporter.fullname" $ }}-configmap-{{ $deploymentKey }}
+                  name: {{ include "docker-hub-rate-limit-exporter.fullname" . }}-configmap
                   key: exporter-port
-      {{- if $deployment.nodeSelector }}
+      {{- if .Values.deployment.nodeSelector }}
       nodeSelector:
-{{ toYaml $deployment.nodeSelector | indent 8 }}
+{{ toYaml .Values.deployment.nodeSelector | indent 8 }}
       {{- end }}
-      {{- if $deployment.affinity }}
+      {{- if .Values.deployment.affinity }}
       affinity:
-{{ toYaml $deployment.affinity | indent 8 }}
+{{ toYaml .Values.deployment.affinity | indent 8 }}
       {{- end }}
-      {{- if $deployment.tolerations }}
+      {{- if .Values.deployment.tolerations }}
       tolerations:
-{{ toYaml $deployment.tolerations | indent 8 }}
+{{ toYaml .Values.deployment.tolerations | indent 8 }}
       {{- end }}
-
----
-{{- end }}
 
 {{- end }}

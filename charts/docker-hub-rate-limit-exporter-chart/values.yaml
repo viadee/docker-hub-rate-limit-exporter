@@ -2,12 +2,16 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-# Commonly used for authenticated users
-deployments:
-    default:
-        enabled: true
+config:
+    # Log level of the exporter
+    verbosity: 1
+    dockerhub:
+        username: ""
+        password: ""
 
-# Commonly used for anonymous users
+deployment:
+    enabled: true
+
 daemonset:
     enabled: false
 
@@ -67,8 +71,8 @@ securityContext: {}
 
 service:
     type: ClusterIP
-    port: 80
-    targetPort: 80
+    port: 9100
+    targetPort: 9100
     nodePort:
     portName: metrics
     annotations: {}
