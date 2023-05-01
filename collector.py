@@ -89,6 +89,7 @@ class DockerHubCollector(object):
         limit = 0
         remaining = 0
         reset = 0
+        source_ip = ""
 
         if "RateLimit-Limit" in resp_headers and "RateLimit-Remaining" in resp_headers:
             limit = self.limit_extractor(resp_headers["RateLimit-Limit"])
@@ -97,18 +98,21 @@ class DockerHubCollector(object):
         if "RateLimit-Reset" in resp_headers:
             reset = self.limit_extractor(resp_headers["RateLimit-Reset"])
 
-        return (limit, remaining, reset)
+        if "Docker-RateLimit-Source" in resp_headers:
+            source_ip = resp_headers["Docker-RateLimit-Source"]
+
+        return (limit, remaining, reset, source_ip)
 
     def collect(self):
-        (limit, remaining, reset) = self.get_registry_limits()
+        (limit, remaining, reset, source_ip) = self.get_registry_limits()
 
-        gr = GaugeMetricFamily("dockerhub_limit_remaining_requests_total", 'Docker Hub Rate Limit Remaining Requests', labels=['limit'])
-        gr.add_metric(["remaining_requests_total"], remaining)
+        gr = GaugeMetricFamily("dockerhub_limit_remaining_requests_total", 'Docker Hub Rate Limit Remaining Requests', labels=['limit','source_ip'])
+        gr.add_metric(["remaining_requests_total", source_ip], remaining)
 
         yield gr
 
-        gl = GaugeMetricFamily("dockerhub_limit_max_requests_total", 'Docker Hub Rate Limit Maximum Requests', labels=['limit'])
-        gl.add_metric(["max_requests_total"], limit)
+        gl = GaugeMetricFamily("dockerhub_limit_max_requests_total", 'Docker Hub Rate Limit Maximum Requests', labels=['limit', 'source_ip'])
+        gl.add_metric(["max_requests_total", source_ip], limit)
 
         yield gl
 
