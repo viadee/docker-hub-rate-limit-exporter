@@ -1,0 +1,246 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "properties": {
+        "affinity": {
+            "properties": {},
+            "type": "object"
+        },
+        "config": {
+            "properties": {
+                "dockerhub": {
+                    "properties": {
+                        "password": {
+                            "type": "string"
+                        },
+                        "username": {
+                            "type": "string"
+                        }
+                    },
+                    "type": "object"
+                },
+                "verbosity": {
+                    "type": "integer"
+                }
+            },
+            "type": "object"
+        },
+        "daemonset": {
+            "properties": {
+                "enabled": {
+                    "type": "boolean"
+                }
+            },
+            "type": "object",
+            "additionalProperties": false
+        },
+        "deployment": {
+            "properties": {
+                "enabled": {
+                    "type": "boolean"
+                }
+            },
+            "type": "object",
+            "additionalProperties": false
+        },
+        "fullnameOverride": {
+            "type": "string"
+        },
+        "hostNetwork": {
+            "type": "boolean"
+        },
+        "hostPID": {
+            "type": "boolean"
+        },
+        "image": {
+            "properties": {
+                "pullPolicy": {
+                    "type": "string"
+                },
+                "repository": {
+                    "type": "string"
+                },
+                "tag": {
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "imagePullSecrets": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                    "name": { "type": "string" }
+                }
+            }
+        },
+        "livenessProbeTimeoutSeconds": {
+            "type": "integer"
+        },
+        "nameOverride": {
+            "type": "string"
+        },
+        "nodeSelector": {
+            "properties": {},
+            "type": "object"
+        },
+        "podAnnotations": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {}
+            }
+        },
+        "podSecurityContext": {
+            "properties": {},
+            "type": "object"
+        },
+        "priorityClassName": {
+            "type": "string"
+        },
+        "readinessProbeTimeoutSeconds": {
+            "type": "integer"
+        },
+        "replicaCount": {
+            "type": "integer"
+        },
+        "resources": {
+            "properties": {
+                "limits": {
+                    "properties": {
+                        "cpu": {
+                            "type": "string"
+                        },
+                        "memory": {
+                            "type": "string"
+                        }
+                    },
+                    "type": "object"
+                },
+                "requests": {
+                    "properties": {
+                        "cpu": {
+                            "type": "string"
+                        },
+                        "memory": {
+                            "type": "string"
+                        }
+                    },
+                    "type": "object"
+                }
+            },
+            "type": "object"
+        },
+        "securityContext": {
+            "properties": {},
+            "type": "object"
+        },
+        "service": {
+            "properties": {
+                "annotations": {
+                    "properties": {},
+                    "type": "object"
+                },
+                "nodePort": {
+                    "type": "integer"
+                },
+                "port": {
+                    "type": "integer"
+                },
+                "portName": {
+                    "type": "string"
+                },
+                "targetPort": {
+                    "type": "integer"
+                },
+                "type": {
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "serviceAccount": {
+            "properties": {
+                "annotations": {
+                    "properties": {},
+                    "type": "object"
+                },
+                "create": {
+                    "type": "boolean"
+                },
+                "imagePullSecrets": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "name": { "type": "string" }
+                        }
+                    }
+                },
+                "name": {
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "serviceMonitor": {
+            "properties": {
+                "additionalLabels": {
+                    "properties": {},
+                    "type": "object"
+                },
+                "bearerTokenFile": {
+                    "type": "string"
+                },
+                "enabled": {
+                    "type": "boolean"
+                },
+                "interval": {
+                    "type": "string"
+                },
+                "jobLabel": {
+                    "type": "string"
+                },
+                "metricRelabelings": {
+                    "type": "array"
+                },
+                "namespace": {
+                    "type": "string"
+                },
+                "proxyUrl": {
+                    "type": "string"
+                },
+                "relabelings": {
+                    "type": "array"
+                },
+                "scheme": {
+                    "type": "string"
+                },
+                "scrapeTimeout": {
+                    "type": "string"
+                },
+                "selectorOverride": {
+                    "properties": {},
+                    "type": "object"
+                },
+                "tlsConfig": {
+                    "properties": {},
+                    "type": "object"
+                }
+            },
+            "type": "object"
+        },
+        "tolerations": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {}
+            }
+        },
+        "updateStrategy": {
+            "type": "string"
+        }
+    },
+    "type": "object"
+}
