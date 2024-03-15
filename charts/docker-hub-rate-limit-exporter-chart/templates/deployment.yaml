@@ -7,7 +7,7 @@ metadata:
   labels:
     {{- include "docker-hub-rate-limit-exporter.labels" . | nindent 4 }}
 spec:
-  replicas: {{ hasKey .Values.deployment "replicaCount" | ternary .Values.deployment.replicaCount 1 }}
+  replicas: {{ hasKey .Values "replicaCount" | ternary .Values.replicaCount 1 }}
   selector:
     matchLabels:
       {{- include "docker-hub-rate-limit-exporter.selectorLabels" . | nindent 6 }}
@@ -18,8 +18,8 @@ spec:
       annotations:
         checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
         checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
-        {{- if .Values.deployment.podAnnotations }}
-        {{- toYaml .Values.deployment.podAnnotations | nindent 8 }}
+        {{- if .Values.podAnnotations }}
+        {{- toYaml .Values.podAnnotations | nindent 8 }}
         {{- end }}
     spec:
       {{- if .Values.imagePullSecrets }}
@@ -79,17 +79,17 @@ spec:
                 configMapKeyRef:
                   name: {{ include "docker-hub-rate-limit-exporter.fullname" . }}-configmap
                   key: exporter-port
-      {{- if .Values.deployment.nodeSelector }}
+      {{- if .Values.nodeSelector }}
       nodeSelector:
-{{ toYaml .Values.deployment.nodeSelector | indent 8 }}
+{{ toYaml .Values.nodeSelector | indent 8 }}
       {{- end }}
-      {{- if .Values.deployment.affinity }}
+      {{- if .Values.affinity }}
       affinity:
-{{ toYaml .Values.deployment.affinity | indent 8 }}
+{{ toYaml .Values.affinity | indent 8 }}
       {{- end }}
-      {{- if .Values.deployment.tolerations }}
+      {{- if .Values.tolerations }}
       tolerations:
-{{ toYaml .Values.deployment.tolerations | indent 8 }}
+{{ toYaml .Values.tolerations | indent 8 }}
       {{- end }}
 
 {{- end }}
