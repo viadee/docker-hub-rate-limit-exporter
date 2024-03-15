@@ -9,9 +9,9 @@ spec:
   selector:
     matchLabels:
       {{- include "docker-hub-rate-limit-exporter.selectorLabels" . | nindent 6 }}
-  {{- if .Values.daemonset.updateStrategy }}
+  {{- if .Values.updateStrategy }}
   updateStrategy:
-{{ toYaml .Values.daemonset.updateStrategy | indent 4 }}
+{{ toYaml .Values.updateStrategy | indent 4 }}
   {{- end }}
   template:
     metadata:
@@ -20,8 +20,8 @@ spec:
       annotations:
         checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
         checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
-        {{- if .Values.daemonset.podAnnotations }}
-        {{- toYaml .Values.daemonset.podAnnotations | nindent 8 }}
+        {{- if .Values.podAnnotations }}
+        {{- toYaml .Values.podAnnotations | nindent 8 }}
         {{- end }}
     spec:
       {{- if .Values.imagePullSecrets }}
@@ -81,17 +81,17 @@ spec:
                 configMapKeyRef:
                   name: {{ include "docker-hub-rate-limit-exporter.fullname" . }}-configmap
                   key: exporter-port
-      {{- if .Values.daemonset.nodeSelector }}
+      {{- if .Values.nodeSelector }}
       nodeSelector:
-{{ toYaml .Values.daemonset.nodeSelector | indent 8 }}
+{{ toYaml .Values.nodeSelector | indent 8 }}
       {{- end }}
-      {{- if .Values.daemonset.affinity }}
+      {{- if .Values.affinity }}
       affinity:
-{{ toYaml .Values.daemonset.affinity | indent 8 }}
+{{ toYaml .Values.affinity | indent 8 }}
       {{- end }}
-      {{- if .Values.daemonset.tolerations }}
+      {{- if .Values.tolerations }}
       tolerations:
-{{ toYaml .Values.daemonset.tolerations | indent 8 }}
+{{ toYaml .Values.tolerations | indent 8 }}
       {{- end }}
       hostNetwork: {{ .Values.hostNetwork }}
       hostPID: {{ .Values.hostPID }}
